@@ -1,0 +1,20 @@
+---
+
+- name: Copy Kafka server.properties
+  template:
+    src: server.properties.j2
+    dest: "{{ kafka_install_dir }}/config/server.properties"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: '0644'
+  notify: Restart Kafka
+
+- name: Copy Kafka systemd service
+  template:
+    src: kafka.service.j2
+    dest: /etc/systemd/system/kafka.service
+    mode: '0644'
+  become: yes
+  notify:
+    - Reload Systemd
+    - Restart Kafka

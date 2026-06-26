@@ -1,0 +1,13 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/kafka
+
+
+- name: Install Kafka
+  import_tasks: install.yml
+
+- name: Configure Kafka
+  import_tasks: configure.yml
+
+- name: Configure ZooKeeper
+  import_tasks: zookeeper.yml

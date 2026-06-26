@@ -1,0 +1,66 @@
+---
+- name: Install Java on Debian
+  apt:
+    name: "{{ java_package_debian }}"
+    state: present
+    update_cache: yes
+  become: yes
+  when: ansible_os_family == "Debian"
+
+- name: Install Java on RedHat
+  dnf:
+    name: "{{ java_package_redhat }}"
+    state: present
+  become: yes
+  when: ansible_os_family == "RedHat"
+
+- name: Create Kafka Group
+  group:
+    name: "{{ kafka_group }}"
+    state: present
+  become: yes
+
+- name: Create Kafka User
+  user:
+    name: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    system: yes
+    shell: /bin/bash
+  become: yes
+
+- name: Ensure /opt exists
+  file:
+    path: /opt
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Download Kafka
+  get_url:
+    url: "{{ kafka_download_url }}"
+    dest: "/tmp/kafka_{{ scala_version }}-{{ kafka_version }}.tgz"
+    mode: '0644'
+
+- name: Extract Kafka
+  unarchive:
+    src: "/tmp/kafka_{{ scala_version }}-{{ kafka_version }}.tgz"
+    dest: /opt
+    remote_src: yes
+    creates: "/opt/kafka_{{ scala_version }}-{{ kafka_version }}"
+  become: yes
+
+- name: Create symbolic link
+  file:
+    src: "/opt/kafka_{{ scala_version }}-{{ kafka_version }}"
+    dest: "{{ kafka_install_dir }}"
+    state: link
+    force: yes
+  become: yes
+
+- name: Set ownership
+  file:
+    path: "/opt/kafka_{{ scala_version }}-{{ kafka_version }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    recurse: yes
+  become: yes

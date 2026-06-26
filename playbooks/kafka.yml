@@ -1,0 +1,8 @@
+---
+- name: Install and Configure Kafka
+  hosts: tag_kafka
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - kafka

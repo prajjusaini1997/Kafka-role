@@ -1,0 +1,20 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for roles/kafka
+
+- name: Reload Systemd
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: Restart ZooKeeper
+  systemd:
+    name: zookeeper
+    state: restarted
+  become: yes
+
+- name: Restart Kafka
+  systemd:
+    name: kafka
+    state: restarted
+  become: yes
