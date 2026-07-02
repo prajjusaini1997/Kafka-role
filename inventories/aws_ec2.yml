@@ -1,3 +1,4 @@
+---
 plugin: amazon.aws.aws_ec2
 
 regions:
@@ -8,11 +9,15 @@ filters:
   instance-state-name: running
 
 hostnames:
-  - ip-address
+  - private-ip-address
+
+compose:
+  ansible_host: private_ip_address
 
 keyed_groups:
   - prefix: tag
     key: tags.Role
 
-compose:
-  ansible_host: public_ip_address
+strict: false
+
+cache: false
