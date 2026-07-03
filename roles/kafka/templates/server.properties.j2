@@ -1,6 +1,7 @@
 broker.id=0
 
 listeners=PLAINTEXT://:{{ kafka_port }}
+advertised.listeners=PLAINTEXT://{{ ansible_host }}:{{ kafka_port }}
 
 log.dirs={{ log_dirs }}
 
