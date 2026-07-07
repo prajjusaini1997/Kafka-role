@@ -1,8 +1,17 @@
 ---
 
-- name: Set broker id from EC2 Name tag
+- name: Set broker id
   set_fact:
-    broker_id: "{{ '0' if tags.Name == 'kafka-node-1' else '1' }}"
+    broker_id: "0"
+
+- name: Create Kafka log directory
+  file:
+    path: "/var/lib/kafka-logs-{{ broker_id }}"
+    state: directory
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    mode: '0755'
+  become: yes
 
 - name: Copy Kafka server.properties
   template:
