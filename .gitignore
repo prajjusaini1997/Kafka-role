@@ -1,0 +1,7 @@
+*.pem
+*.key
+*.tfstate
+*.tfstate.*
+.terraform/
+__pycache__/
+*.retry

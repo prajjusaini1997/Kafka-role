@@ -22,8 +22,9 @@ kafka_download_url: "https://archive.apache.org/dist/kafka/{{ kafka_version }}/k
 
 # Configuration
 kafka_port: 9092
-zookeeper_connect: localhost:2181
+zookeeper_connect: "172.31.24.154:2181"
 log_dirs: /tmp/kafka-logs
 
 #zookeeper_port: 2181
 zookeeper_data_dir: /tmp/zookeeper
+

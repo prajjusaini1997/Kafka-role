@@ -1,5 +1,9 @@
 ---
 
+- name: Set broker id from EC2 Name tag
+  set_fact:
+    broker_id: "{{ '0' if tags.Name == 'kafka-node-1' else '1' }}"
+
 - name: Copy Kafka server.properties
   template:
     src: server.properties.j2

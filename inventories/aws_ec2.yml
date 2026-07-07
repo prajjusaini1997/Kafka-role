@@ -9,15 +9,12 @@ filters:
   instance-state-name: running
 
 hostnames:
-  - private-ip-address
+  - ip-address
 
 compose:
-  ansible_host: private_ip_address
+  ansible_host: public_ip_address
 
 keyed_groups:
   - prefix: tag
     key: tags.Role
 
-strict: false
-
-cache: false
