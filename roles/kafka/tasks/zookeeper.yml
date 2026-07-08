@@ -7,6 +7,7 @@
     dest: /etc/systemd/system/zookeeper.service
     mode: '0644'
   become: yes
+  when: broker_id == 0
 
 - name: Reload systemd
   systemd:
