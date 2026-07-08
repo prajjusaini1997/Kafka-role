@@ -4,6 +4,7 @@
     name: "{{ java_package_debian }}"
     state: present
     update_cache: yes
+    cache_valid_time: 3600
   become: yes
   when: ansible_os_family == "Debian"
 
@@ -34,6 +35,18 @@
     state: directory
     mode: '0755'
   become: yes
+
+- name: Check Kafka archive
+  stat:
+    path: "/tmp/kafka_{{ scala_version }}-{{ kafka_version }}.tgz"
+  register: kafka_archive
+
+- name: Download Kafka
+  get_url:
+    url: "{{ kafka_download_url }}"
+    dest: "/tmp/kafka_{{ scala_version }}-{{ kafka_version }}.tgz"
+    mode: '0644'
+  when: not kafka_archive.stat.exists
 
 - name: Download Kafka
   get_url:
