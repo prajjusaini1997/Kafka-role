@@ -29,7 +29,7 @@ log.dirs=/tmp/kafka-logs
 # ZooKeeper
 #############################################
 
-zookeeper.connect={{ groups['tag_zookeeper'][0] }}:2181
+zookeeper.connect={{ hostvars[groups['tag_kafka'][0]]['private_ip_address'] }}:2181
 
 #############################################
 # Topic Settings
