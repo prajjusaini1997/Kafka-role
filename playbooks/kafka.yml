@@ -1,6 +1,7 @@
 ---
 - name: Install and Configure Kafka
   hosts: tag_kafka
+  serial: 1
   become: yes
   gather_facts: yes
 
