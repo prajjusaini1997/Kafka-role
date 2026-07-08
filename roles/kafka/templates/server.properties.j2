@@ -1,23 +1,79 @@
-broker.id={{ broker_id }}
+#############################################
+# Kafka Broker ID
+#############################################
+
+{% if tags.Name == "Kafka-Broker-1" %}
+broker.id=0
+{% elif tags.Name == "Kafka-Broker-2" %}
+broker.id=1
+{% elif tags.Name == "Kafka-Broker-3" %}
+broker.id=2
+{% else %}
+broker.id=0
+{% endif %}
+
+#############################################
+# Listeners
+#############################################
 
 listeners=PLAINTEXT://:9092
-advertised.listeners=PLAINTEXT://{{ ansible_default_ipv4.address }}:9092
+advertised.listeners=PLAINTEXT://{{ private_ip_address }}:9092
 
-log.dirs=/var/lib/kafka-logs-{{ broker_id }}
+#############################################
+# Log Directory
+#############################################
 
-zookeeper.connect={{ zookeeper_connect }}
+log.dirs=/tmp/kafka-logs
+
+#############################################
+# ZooKeeper
+#############################################
+
+zookeeper.connect={{ groups['tag_zookeeper'][0] }}:2181
+
+#############################################
+# Topic Settings
+#############################################
+
+num.partitions=3
+default.replication.factor=3
+offsets.topic.replication.factor=3
+transaction.state.log.replication.factor=3
+transaction.state.log.min.isr=2
+
+#############################################
+# Network Threads
+#############################################
 
 num.network.threads=3
 num.io.threads=8
 
+#############################################
+# Socket Buffers
+#############################################
+
 socket.send.buffer.bytes=102400
 socket.receive.buffer.bytes=102400
-
 socket.request.max.bytes=104857600
 
-offsets.topic.replication.factor=1
-transaction.state.log.replication.factor=1
-transaction.state.log.min.isr=1
+#############################################
+# Log Retention
+#############################################
 
+log.retention.hours=168
+log.segment.bytes=1073741824
+log.retention.check.interval.ms=300000
+
+#############################################
+# Internal Topics
+#############################################
+
+min.insync.replicas=2
 delete.topic.enable=true
-auto.create.topics.enable=false
+auto.create.topics.enable=true
+
+#############################################
+# Group Coordinator
+#############################################
+
+group.initial.rebalance.delay.ms=0

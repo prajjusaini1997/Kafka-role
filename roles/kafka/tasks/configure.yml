@@ -1,8 +1,8 @@
 ---
 
-- name: Set broker id
+- name: Set broker id dynamically
   set_fact:
-    broker_id: "0"
+    broker_id: "{{ (hostvars[inventory_hostname]['tags']['Name'] | regex_search('[0-9]+$') | int) - 1 }}"
 
 - name: Create Kafka log directory
   file:

@@ -15,5 +15,7 @@ compose:
   ansible_host: private_ip_address
 
 keyed_groups:
-  - prefix: tag
-    key: tags.Role
+  - key: tags.Role
+    prefix: tag
+
+strict: False
