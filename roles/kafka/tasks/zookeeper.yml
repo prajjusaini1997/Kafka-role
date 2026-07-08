@@ -1,5 +1,5 @@
 ---
-# Tasks related to ZooKeeper will be added here.
+# ZooKeeper runs only on broker-1
 
 - name: Copy ZooKeeper systemd service
   template:
@@ -9,19 +9,25 @@
   become: yes
   when: broker_id == 0
 
+
 - name: Reload systemd
   systemd:
     daemon_reload: yes
   become: yes
+  when: broker_id == 0
+
 
 - name: Enable ZooKeeper
   systemd:
     name: zookeeper
     enabled: yes
   become: yes
+  when: broker_id == 0
+
 
 - name: Start ZooKeeper
   systemd:
     name: zookeeper
     state: started
   become: yes
+  when: broker_id == 0
