@@ -6,14 +6,18 @@
     update_cache: yes
     cache_valid_time: 3600
   become: yes
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
+  async: 300
+  poll: 10
 
 - name: Install Java on RedHat
   dnf:
     name: "{{ java_package_redhat }}"
     state: present
   become: yes
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat"
+  async: 300
+  poll: 10
 
 - name: Create Kafka Group
   group:
