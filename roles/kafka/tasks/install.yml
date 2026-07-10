@@ -46,6 +46,8 @@
     url: "{{ kafka_download_url }}"
     dest: "/tmp/kafka_{{ scala_version }}-{{ kafka_version }}.tgz"
     mode: '0644'
+  async: 300
+  poll: 10
   when: not kafka_archive.stat.exists
 
 - name: Extract Kafka
@@ -55,6 +57,8 @@
     remote_src: yes
     creates: "/opt/kafka_{{ scala_version }}-{{ kafka_version }}"
   become: yes
+  async: 120
+  poll: 5
 
 - name: Check if /opt/kafka is a directory (not a symlink)
   stat:
