@@ -11,3 +11,10 @@
 
 - name: Configure ZooKeeper
   import_tasks: zookeeper.yml
+
+- name: Enable and Start Kafka
+  systemd:
+    name: kafka
+    enabled: yes
+    state: started
+  become: yes

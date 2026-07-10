@@ -48,12 +48,6 @@
     mode: '0644'
   when: not kafka_archive.stat.exists
 
-- name: Download Kafka
-  get_url:
-    url: "{{ kafka_download_url }}"
-    dest: "/tmp/kafka_{{ scala_version }}-{{ kafka_version }}.tgz"
-    mode: '0644'
-
 - name: Extract Kafka
   unarchive:
     src: "/tmp/kafka_{{ scala_version }}-{{ kafka_version }}.tgz"
@@ -61,6 +55,25 @@
     remote_src: yes
     creates: "/opt/kafka_{{ scala_version }}-{{ kafka_version }}"
   become: yes
+
+- name: Check if /opt/kafka is a directory (not a symlink)
+  stat:
+    path: /opt/kafka
+  register: opt_kafka_stat
+
+- name: Stop existing standalone Kafka/Zookeeper processes
+  shell: |
+    pkill -f 'kafka.Kafka' || true
+    pkill -f 'org.apache.zookeeper' || true
+  become: yes
+  when: opt_kafka_stat.stat.exists and not opt_kafka_stat.stat.islnk
+
+- name: Remove existing /opt/kafka directory if it is not a symlink
+  file:
+    path: /opt/kafka
+    state: absent
+  become: yes
+  when: opt_kafka_stat.stat.exists and not opt_kafka_stat.stat.islnk
 
 - name: Create symbolic link
   file:

@@ -2,15 +2,7 @@
 # Kafka Broker ID
 #############################################
 
-{% if tags.Name == "Kafka-Broker-1" %}
-broker.id=0
-{% elif tags.Name == "Kafka-Broker-2" %}
-broker.id=1
-{% elif tags.Name == "Kafka-Broker-3" %}
-broker.id=2
-{% else %}
-broker.id=0
-{% endif %}
+broker.id={{ broker_id }}
 
 #############################################
 # Listeners
@@ -23,13 +15,13 @@ advertised.listeners=PLAINTEXT://{{ private_ip_address }}:9092
 # Log Directory
 #############################################
 
-log.dirs=/tmp/kafka-logs
+log.dirs=/var/lib/kafka-logs-{{ broker_id }}
 
 #############################################
 # ZooKeeper
 #############################################
 
-zookeeper.connect={{ hostvars[groups['tag_kafka'][0]]['private_ip_address'] }}:2181
+zookeeper.connect={% for host in groups['tag_kafka'] %}{% if hostvars[host]['tags']['Name'] == 'Kafka-Broker-1' %}{{ hostvars[host]['private_ip_address'] }}{% endif %}{% endfor %}:2181
 
 #############################################
 # Topic Settings
