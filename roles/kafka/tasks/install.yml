@@ -57,8 +57,6 @@
     remote_src: yes
     creates: "/opt/kafka_{{ scala_version }}-{{ kafka_version }}"
   become: yes
-  async: 120
-  poll: 5
 
 - name: Check if /opt/kafka is a directory (not a symlink)
   stat:
