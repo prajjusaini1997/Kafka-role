@@ -7,14 +7,14 @@
     dest: /etc/systemd/system/zookeeper.service
     mode: '0644'
   become: yes
-  when: broker_id == 0
+  when: broker_id | int == 0
 
 
 - name: Reload systemd
   systemd:
     daemon_reload: yes
   become: yes
-  when: broker_id == 0
+  when: broker_id | int == 0
 
 
 - name: Enable ZooKeeper
@@ -22,7 +22,7 @@
     name: zookeeper
     enabled: yes
   become: yes
-  when: broker_id == 0
+  when: broker_id | int == 0
 
 
 - name: Start ZooKeeper
@@ -30,4 +30,13 @@
     name: zookeeper
     state: started
   become: yes
-  when: broker_id == 0
+  when: broker_id | int == 0
+
+
+- name: Wait for ZooKeeper port 2181
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['private_ip_address'] }}"
+    port: 2181
+    delay: 5
+    timeout: 120
+  when: broker_id | int == 0

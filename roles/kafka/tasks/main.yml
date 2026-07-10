@@ -12,6 +12,14 @@
 - name: Configure ZooKeeper
   import_tasks: zookeeper.yml
 
+- name: Wait for ZooKeeper to be ready before starting Kafka
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['private_ip_address'] }}"
+    port: 2181
+    delay: 5
+    timeout: 120
+  when: broker_id | int == 0
+
 - name: Enable and Start Kafka
   systemd:
     name: kafka
